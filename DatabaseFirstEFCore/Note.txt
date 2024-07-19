@@ -1,0 +1,32 @@
+﻿
+--1-- Packages
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+Microsoft.EntityFrameworkCore.Design
+
+--2.1-- Create ModelClass and DbCoreContextClass -- 
+
+Scaffold-DbContext "Server=DESKTOP-9371I5C\SQL2019EXPRESS; Database=DatabaseFirstDB_Core; Trusted_Connection=True; Encrypt=false" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+--2.2-- Update ModelClass and DbCoreContextClass -- New Tables -- 
+
+Scaffold-DbContext "Server=DESKTOP-9371I5C\SQL2019EXPRESS; Database=DatabaseFirstDB_Core; Trusted_Connection=True; Encrypt=false" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+
+--3.1-- Copy to DbContext --
+
+Server=DESKTOP-9371I5C\\SQL2019EXPRESS; Database=DatabaseFirstDB_Core; Trusted_Connection=True; Encrypt=false
+
+--3.2-- Paste in appsettings.json --
+
+"ConnectionStrings": {
+    "dbcs": "Server=DESKTOP-9371I5C\\SQL2019EXPRESS; Database=DatabaseFirstDB_Core; Trusted_Connection=True; Encrypt=false"
+  }
+
+--4-- Registering Connection String --
+
+using DatabaseFirstEFCore.Models;
+using Microsoft.EntityFrameworkCore;
+
+var provider = builder.Services.BuildServiceProvider();
+var config = provider.GetRequiredService<IConfiguration>();
+builder.Services.AddDbContext<DatabaseFirstDbCoreContext>(item => item.UseSqlServer(config.GetConnectionString("dbcs")));
